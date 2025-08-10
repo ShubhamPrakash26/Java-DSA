@@ -11,6 +11,6 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
-        System.err.println(Fibonacci(10));
+        System.err.println(Fibonacci(5));
     }
 }

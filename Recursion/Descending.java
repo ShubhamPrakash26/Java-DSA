@@ -1,5 +1,3 @@
-package Recursion;
-
 public class Descending {
 
     public static void printDescending(int n) {
