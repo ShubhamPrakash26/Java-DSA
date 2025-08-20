@@ -21,9 +21,9 @@ class AddNumberLinkedLists {
         return prev;
     }
 
-    static Node addTwoLists(Node first, Node second) {
+    // static Node addTwoLists(Node first, Node second) {
 
-    }
+    // }
 
     public static void main(String[] args) {
         
