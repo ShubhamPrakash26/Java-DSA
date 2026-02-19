@@ -1,5 +1,5 @@
 package DivideAndConquer;
-public class Sort1 {
+public class MergeSort {
     public static void mergeSort(int arr[], int si, int ei) {
         if (si >= ei) {  
             return;
