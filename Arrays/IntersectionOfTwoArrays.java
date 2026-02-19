@@ -1,3 +1,4 @@
+import java.util.Arrays;
 public class IntersectionOfTwoArrays {
 
     public static int[] intersection(int[] nums1, int[] nums2) {
@@ -13,6 +14,12 @@ public class IntersectionOfTwoArrays {
             }
         }
         return Arrays.copyOf(result, count);
+    }
+
+    public static void printArray(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
     }
     
     public static void main(String[] args) {
