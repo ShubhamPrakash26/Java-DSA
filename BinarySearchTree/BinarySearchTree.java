@@ -3,7 +3,6 @@ import java.util.*;
 
 
 public class BinarySearchTree {
-
     static class Node{
         int data;
         Node left;
@@ -45,6 +44,15 @@ public class BinarySearchTree {
         inOrder(root.left);
         System.out.print(root.data + " ");
         inOrder(root.right);
+    }
+
+    public static void preOrder(Node root){
+        if(root==null){
+            return;
+        }
+        System.out.print(root.data + " ");
+        preOrder(root.left);
+        preOrder(root.right);
     }
 
     public static Node findInroderSuccessor(Node root){
@@ -134,27 +142,119 @@ public class BinarySearchTree {
         return root;
     }
 
+    public static Node SortedArrayToBST(int arr[], int start, int end){
+        if(start>end){
+            return null;
+        }
+        int mid = (start+end)/2;
+        Node root = new Node(arr[mid]);
+        root.left = SortedArrayToBST(arr, start, mid-1);
+        root.right = SortedArrayToBST(arr, mid+1, end);
+        return root;
+    }
+
+    public static void getInOrder(Node root, ArrayList<Integer> inorder){
+        if(root==null){
+            return;
+        }
+        getInOrder(root.left, inorder);
+        inorder.add(root.data);
+        getInOrder(root.right, inorder);
+    }
+    public static Node createBalanceBST(ArrayList<Integer> inorder, int start, int end){
+        if(start>end){
+            return null;
+        }
+        int mid = (start+end)/2;
+        Node root = new Node(inorder.get(mid));
+        root.left = createBalanceBST(inorder, start, mid-1);
+        root.right = createBalanceBST(inorder, mid+1, end);
+        return root;
+    }
+
+    public static Node balanceBST(Node root){
+        //inorder sequence
+        ArrayList<Integer> inorder = new ArrayList<>();
+        getInOrder(root, inorder);
+        //sorted inorder -> balance BST
+        return createBalanceBST(inorder, 0, inorder.size()-1);
+    }
+
+    static class Info{
+        boolean isBST;
+        int size;
+        int min;
+        int max;
+        public Info(boolean isBST, int size, int min, int max){
+            this.isBST = isBST;
+            this.size = size;
+            this.min = min;
+            this.max = max;
+        }
+    }
+
+    public static int maxBST = 0;
+
+    public static Info largestBST(Node root){
+        if(root==null){
+            return new Info(true,0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        }
+        Info leftInfo =largestBST(root.left);
+        Info rightInfo =largestBST(root.right);
+        int size = leftInfo.size + rightInfo.size + 1;
+        int min = Math.min(root.data, Math.min(leftInfo.min, rightInfo.min));
+        int max = Math.max(root.data, Math.max(leftInfo.max, rightInfo.max));
+        if(root.data <=leftInfo.max || root.data >= rightInfo.min){
+            return new Info(false, size, min, max);
+        }
+        if(leftInfo.isBST && rightInfo.isBST){
+            maxBST = Math.max(maxBST, size);
+            return new Info(true, size,min,max);
+        }
+        return new Info(false, size, min, max);
+    }
+
+    public static Node mergeBSTs(Node root1, Node root2){
+        //Step 1: Get Inorder for root1
+        ArrayList<Integer> inorder1 = new ArrayList<>();
+        getInOrder(root1, inorder1);
+
+        //Step 2: Get Inorder for root2
+        ArrayList<Integer> inorder2 = new ArrayList<>();
+        getInOrder(root2, inorder2);
+
+        // Step 3: Merge
+        int i=0,j=0;
+        ArrayList<Integer> finalInorder = new ArrayList<>();
+        while(i<inorder1.size() && j<inorder2.size()){
+            if(inorder1.get(i)<=inorder2.get(j)){
+                finalInorder.add(inorder1.get(i++));
+            } else{
+                finalInorder.add(inorder2.get(j++));
+            }
+        }
+
+        while(i<inorder1.size()){
+            finalInorder.add(inorder1.get(i++));
+        }
+
+        while(j<inorder2.size()){
+            finalInorder.add(inorder2.get(j++));
+        }
+        return createBalanceBST(finalInorder, 0, finalInorder.size()-1);
+    }
 
     public static void main(String args[]){
-        int values[] = {8,5,3,1,4,6,10,11,14};
-        Node root = null;
-        for(int i=0;i<values.length;i++){
-            root = insert(root, values[i]);
-        }
-        // inOrder(root);
-        // System.out.println();
-        // if(search(root, 3)){
-        //     System.out.println("Found");
-        // } else {
-        //     System.out.println("Not Found");
-        // }
-        // root = delete(root, 6);
-        // inOrder(root);
-        // printInRange(root, 5, 12);
-        // ArrayList<Integer> path = new ArrayList<Integer>();
-        // printRootToLeaf(root, path);
-        // System.out.println(isValidBST(root, null, null));
-        // root = createMirror(root);
-        // inOrder(root);
+
+        Node root1 = new Node(2);
+        root1.left = new Node(1);
+        root1.right = new Node(4);
+
+        Node root2 = new Node(9);
+        root2.left = new Node(3);
+        root2.right = new Node(12);
+
+        Node root = mergeBSTs(root1, root2);
+        preOrder(root);
     }
 }
